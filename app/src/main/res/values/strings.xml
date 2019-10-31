@@ -385,5 +385,7 @@
     <string name="err_floor_is_empty">Bạn chưa chọn tầng!</string>
     <string name="text_get_code_pallet_success">Lấy danh sách pallet thành công</string>
     <string name="text_search_number_pack">Tìm Pallet</string>
+    <string name="err_scan_pack_empty">Không có sản phẩm nào để in. Vui lòng kiểm tra lại!</string>
+    <string name="err_nunber_pack_not_enough">Bạn chưa quét đủ số lượng gói trong sản phẩm. Bạn có muốn in không?</string>
 
 </resources>

@@ -214,9 +214,9 @@ public class DatabaseRealm {
         });
     }
 
-    public boolean checkEnoughPackPrint(long orderId, int floorId, int batch) {
+    public HashMap<Boolean, Integer> checkEnoughPackPrint(long orderId, int floorId, int batch) {
         Realm realm = getRealmInstance();
-        boolean enough = CreatePalletModel.checkEnoughPackPrint(realm,orderId,floorId,batch);
+        HashMap<Boolean, Integer> enough = CreatePalletModel.checkEnoughPackPrint(realm,orderId,floorId,batch);
         return enough;
     }
 

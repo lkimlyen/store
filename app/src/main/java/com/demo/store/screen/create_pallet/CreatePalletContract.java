@@ -40,6 +40,8 @@ public interface CreatePalletContract {
 
         void showDialogWarningResidual(ProductListModel productListModel, ProductModel productModel, String barcode);
 
+        void showWarningPrint();
+
         void goToPrint();
 
     }

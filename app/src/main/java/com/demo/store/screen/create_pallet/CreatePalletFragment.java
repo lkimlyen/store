@@ -124,10 +124,10 @@ public class CreatePalletFragment extends BaseFragment implements CreatePalletCo
 
                 String contents = barcode.rawValue;
                 String barcode2 = contents.replace("DEMO", "");
-                String codeSO = tvCodeSO.getText().toString().substring(0,2)+tvCodeSO.getText().toString().substring(5);
-                if (barcode2.contains(codeSO)){
+                String codeSO = tvCodeSO.getText().toString().substring(0, 2) + tvCodeSO.getText().toString().substring(5);
+                if (barcode2.contains(codeSO)) {
                     mPresenter.checkBarcode(barcode2, orderId, batch);
-                }else {
+                } else {
                     showError(getString(R.string.text_barcode_no_exist));
                     startMusicError();
                     turnOnVibrator();
@@ -578,6 +578,30 @@ public class CreatePalletFragment extends BaseFragment implements CreatePalletCo
     }
 
     @Override
+    public void showWarningPrint() {
+        new SweetAlertDialog(getContext(), SweetAlertDialog.WARNING_TYPE)
+                .setTitleText(getString(R.string.text_title_noti))
+                .setContentText(getString(R.string.err_nunber_pack_not_enough))
+                .setConfirmText(getString(R.string.text_yes))
+                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+                        sweetAlertDialog.dismiss();
+                        goToPrint();
+
+                    }
+                })
+                .setCancelText(getString(R.string.text_no))
+                .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+                        sweetAlertDialog.dismiss();
+                    }
+                })
+                .show();
+    }
+
+    @Override
     public void goToPrint() {
         PrintPalletActivity.start(getActivity(), orderId, tvCodeSO.getText().toString(), tvCustomerName.getText().toString(),
                 floorId, tvFloor.getText().toString(), batch);
@@ -606,8 +630,8 @@ public class CreatePalletFragment extends BaseFragment implements CreatePalletCo
             showError(getString(R.string.err_batch_is_empty));
             return;
         }
-        String codeSO = tvCodeSO.getText().toString().substring(0,2)+tvCodeSO.getText().toString().substring(5);
-        if (edtBarcode.getText().toString().trim().contains(codeSO)){
+        String codeSO = tvCodeSO.getText().toString().substring(0, 2) + tvCodeSO.getText().toString().substring(5);
+        if (edtBarcode.getText().toString().trim().contains(codeSO)) {
             new SweetAlertDialog(getContext(), SweetAlertDialog.WARNING_TYPE)
                     .setTitleText(getString(R.string.dialog_default_title))
                     .setContentText(getString(R.string.text_save_barcode))
@@ -627,7 +651,7 @@ public class CreatePalletFragment extends BaseFragment implements CreatePalletCo
                         }
                     })
                     .show();
-        }else {
+        } else {
             showError(getString(R.string.text_barcode_no_exist));
             startMusicError();
             turnOnVibrator();

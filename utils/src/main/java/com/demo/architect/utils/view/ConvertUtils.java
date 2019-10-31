@@ -1,6 +1,5 @@
 package com.demo.architect.utils.view;
 
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -29,18 +28,12 @@ public class ConvertUtils {
         }
     }
 
-    public static String getDateTimeCurrent() {
-        Date currentTime = Calendar.getInstance().getTime();
-        String sDate = "";
-        SimpleDateFormat formatter = new SimpleDateFormat(APP_DATETIME_FORMAT);
-        sDate = formatter.format(currentTime);
-        return sDate;
-    }
+
 
     public static String getDateTimeCurrentShort() {
         Date currentTime = Calendar.getInstance().getTime();
         String sDate = "";
-        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy",Locale.getDefault());
+        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
         sDate = formatter.format(currentTime);
         return sDate;
     }
@@ -60,7 +53,7 @@ public class ConvertUtils {
     public static Date ConvertStringToShortDate(String s) {
         Date date = null;
         String expectedPattern = "dd/MM/yyyy";
-        SimpleDateFormat formatter = new SimpleDateFormat(expectedPattern,Locale.getDefault());
+        SimpleDateFormat formatter = new SimpleDateFormat(expectedPattern, Locale.getDefault());
         try {
             date = formatter.parse(s);
         } catch (ParseException e) {
@@ -68,6 +61,11 @@ public class ConvertUtils {
         }
         return date;
 
+    }
+
+    public static Date getDateTimeCurrent() {
+        Date currentTime = Calendar.getInstance().getTime();
+        return currentTime;
     }
 
     public static String formatDate(String s) {

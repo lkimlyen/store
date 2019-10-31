@@ -3,6 +3,7 @@ package com.demo.architect.data.model.offline;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.Date;
 import java.util.UUID;
 
 import io.realm.Realm;
@@ -23,7 +24,7 @@ public class DetailProductScanModel extends RealmObject {
 
     private String productCode;
     private int numberPack;
-
+    private Date date;
     @SerializedName("Quantity")
     @Expose
     private int number;
@@ -43,10 +44,10 @@ public class DetailProductScanModel extends RealmObject {
 
     }
 
-    public DetailProductScanModel(String barcode, long productId, String productName, String productCode, int numberPack, int number, String pack, int maxNumber, int batch) {
+    public DetailProductScanModel( String barcode, long productId, String productName, String productCode, int numberPack, int number, String pack, int maxNumber, int batch) {
+        this.id = UUID.randomUUID().getMostSignificantBits();
         this.numberPack = numberPack;
         this.maxNumber = maxNumber;
-        id = UUID.randomUUID().getMostSignificantBits();
         this.barcode = barcode;
         this.productId = productId;
         this.productName = productName;
@@ -73,6 +74,8 @@ public class DetailProductScanModel extends RealmObject {
         log.setNumberScanned(log.getNumberScanned() + ratio);
         log.setNumberRest(log.getNumberTotal() - log.getNumberScanned());
     }
+
+
 
     public long getId() {
         return id;
@@ -124,5 +127,9 @@ public class DetailProductScanModel extends RealmObject {
 
     public int getMaxNumber() {
         return maxNumber;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
     }
 }

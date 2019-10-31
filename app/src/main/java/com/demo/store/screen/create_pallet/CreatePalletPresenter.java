@@ -175,14 +175,26 @@ public class CreatePalletPresenter implements CreatePalletContract.Presenter {
 
     @Override
     public void checkEnoughPack(long orderId, int floorId, int batch) {
-        localRepository.checkEnoughPackPrint(orderId, floorId, batch).subscribe(new Action1<Boolean>() {
+        localRepository.checkEnoughPackPrint(orderId, floorId, batch).subscribe(new Action1<HashMap<Boolean, Integer>>() {
             @Override
-            public void call(Boolean enough) {
-                if (enough) {
-                    view.goToPrint();
-                } else {
-                    view.showError(CoreApplication.getInstance().getString(R.string.err_scan_pack_not_enough));
+            public void call(HashMap<Boolean, Integer> maps) {
+                for ( Map.Entry<Boolean,Integer> item : maps.entrySet()){
+                    if (item.getKey()){
+                        if (item.getValue() > 0){
+                            view.showWarningPrint();
+                        }else {
+                            view.goToPrint();
+                        }
+                    }else {
+                        if (item.getValue() == 0){
+                            view.showError(CoreApplication.getInstance().getString(R.string.err_scan_pack_empty));
+                        }else {
+                            view.showError(CoreApplication.getInstance().getString(R.string.err_scan_pack_not_enough));
+                        }
+                    }
                 }
+
+
             }
         });
     }

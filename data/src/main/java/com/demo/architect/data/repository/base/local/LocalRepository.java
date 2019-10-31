@@ -54,7 +54,7 @@ public interface LocalRepository {
 
     Observable<String> deleteScanPallet(long id, long detaiId);
 
-    Observable<Boolean> checkEnoughPackPrint(long orderId, int floorId, int batch);
+    Observable<HashMap<Boolean, Integer>> checkEnoughPackPrint(long orderId, int floorId, int batch);
 
     Observable<String> deleteDataLocal();
 }

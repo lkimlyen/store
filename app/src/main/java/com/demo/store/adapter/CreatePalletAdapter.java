@@ -17,6 +17,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.realm.OrderedRealmCollection;
 import io.realm.RealmRecyclerViewAdapter;
+import io.realm.Sort;
 
 public class CreatePalletAdapter extends RealmRecyclerViewAdapter<CreatePalletModel, CreatePalletAdapter.HistoryHolder> {
 
@@ -45,7 +46,7 @@ public class CreatePalletAdapter extends RealmRecyclerViewAdapter<CreatePalletMo
 
     private void setDataToViews(HistoryHolder holder, CreatePalletModel item) {
         holder.tvFloor.setText(item.getFloorName() +" - " + item.getApartmentName());
-        DetailProductAdapter adapter = new DetailProductAdapter(item.getProductList(), new DetailProductAdapter.OnItemListener() {
+        DetailProductAdapter adapter = new DetailProductAdapter(item.getProductList().sort("date", Sort.DESCENDING), new DetailProductAdapter.OnItemListener() {
             @Override
             public void onItemClick(DetailProductScanModel detail) {
                 listener.onItemClick(item.getId(),detail.getId());

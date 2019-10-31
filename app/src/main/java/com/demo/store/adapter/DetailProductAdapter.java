@@ -117,12 +117,12 @@ public class DetailProductAdapter extends RealmRecyclerViewAdapter<DetailProduct
             }
         });
 
-        if (log.getNumberRest() > 0) {
+        if (item.getNumber() < item.getMaxNumber()) {
             holder.llMain.setBackgroundColor(CoreApplication.getInstance().getResources().getColor(android.R.color.holo_red_dark));
             holder.txtQuantityRest.setTextColor(CoreApplication.getInstance().getResources().getColor(android.R.color.white));
 
             holder.edtNumberScan.setTextColor(CoreApplication.getInstance().getResources().getColor(android.R.color.white));
-        } else if (log.getNumberRest() == 0) {
+        } else if (item.getNumber() == item.getMaxNumber()) {
             holder.llMain.setBackgroundColor(CoreApplication.getInstance().getResources().getColor(R.color.colorGreen));
             holder.edtNumberScan.setTextColor(CoreApplication.getInstance().getResources().getColor(android.R.color.white));
             holder.txtQuantityRest.setTextColor(CoreApplication.getInstance().getResources().getColor(android.R.color.white));

@@ -275,12 +275,12 @@ public class LocalRepositoryImpl implements LocalRepository {
     }
 
     @Override
-    public Observable<Boolean> checkEnoughPackPrint(final long orderId, final int floorId, final int batch) {
-        return Observable.create(new Observable.OnSubscribe<Boolean>() {
+    public Observable<HashMap<Boolean, Integer>> checkEnoughPackPrint(final long orderId, final int floorId, final int batch) {
+        return Observable.create(new Observable.OnSubscribe<HashMap<Boolean, Integer>>() {
             @Override
-            public void call(Subscriber<? super Boolean> subscriber) {
+            public void call(Subscriber<? super HashMap<Boolean, Integer>> subscriber) {
                 try {
-                   boolean enough = databaseRealm.checkEnoughPackPrint (orderId,floorId,batch);
+                    HashMap<Boolean, Integer> enough = databaseRealm.checkEnoughPackPrint (orderId,floorId,batch);
                     subscriber.onNext(enough);
                     subscriber.onCompleted();
                 } catch (Exception e) {
