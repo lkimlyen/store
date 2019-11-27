@@ -1,9 +1,9 @@
 package com.demo.architect.data.model.offline;
 
 import com.demo.architect.data.helper.Constants;
+import com.demo.architect.data.model.ProductUploadEntity;
 import com.demo.architect.utils.view.ConvertUtils;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -12,6 +12,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import io.realm.Realm;
@@ -31,10 +32,6 @@ public class CreatePalletModel extends RealmObject {
 
     private long orderId;
     private int batch;
-
-    @Expose
-    @SerializedName("ProductID")
-    private long productId;
     private Date date;
 
     @Expose
@@ -55,11 +52,10 @@ public class CreatePalletModel extends RealmObject {
     public CreatePalletModel() {
     }
 
-    public CreatePalletModel(long groupId, long orderId, long productId, int number, int floorId, String floorName, int apartmentId, String apartmentName, int batch) {
+    public CreatePalletModel(long groupId, long orderId, int number, int floorId, String floorName, int apartmentId, String apartmentName, int batch) {
         this.orderId = orderId;
         id = UUID.randomUUID().getMostSignificantBits();
         this.groupId = groupId;
-        this.productId = productId;
         this.number = number;
         this.floorId = floorId;
         this.floorName = floorName;
@@ -77,7 +73,7 @@ public class CreatePalletModel extends RealmObject {
                 .findFirst();
 
         if (createPalletModel == null) {
-            createPalletModel = new CreatePalletModel(productListModel.getId(), productListModel.getOrderId(), productModel.getId(),
+            createPalletModel = new CreatePalletModel(productListModel.getId(), productListModel.getOrderId(),
                     productListModel.getNumber(), productListModel.getFloorId(),
                     productListModel.getFloorName(), productListModel.getApartmentId(), productListModel.getApartmentName(), batch);
             createPalletModel = realm.copyToRealm(createPalletModel);
@@ -89,7 +85,7 @@ public class CreatePalletModel extends RealmObject {
         RealmList<DetailProductScanModel> detailProductList = createPalletModel.getProductList();
         DetailProductScanModel detailProductScanModel = detailProductList.where().equalTo("productId", productModel.getId()).equalTo("barcode", barcode).findFirst();
         if (detailProductScanModel == null) {
-            detailProductScanModel = new DetailProductScanModel( barcode, productModel.getId(), productModel.getName(),
+            detailProductScanModel = new DetailProductScanModel(barcode, productModel.getId(), productModel.getName(),
                     productModel.getCode(), numberPack, 1, packCode, productListModel.getNumber() * productModel.getNumber(), batch);
             detailProductScanModel = DetailProductScanModel.create(realm, detailProductScanModel);
             detailProductList.add(detailProductScanModel);
@@ -145,11 +141,32 @@ public class CreatePalletModel extends RealmObject {
     public static String getListCreatePalletUpload(Realm realm, long orderId, int batch, int floorId) {
         RealmResults<CreatePalletModel> realmResults = realm.where(CreatePalletModel.class).equalTo("orderId", orderId)
                 .equalTo("batch", batch).equalTo("floorId", floorId).equalTo("status", Constants.WAITING_UPLOAD).findAll();
-        List<CreatePalletModel> list = realm.copyFromRealm(realmResults);
-        GsonBuilder builder = new GsonBuilder();
-        builder.excludeFieldsWithoutExposeAnnotation();
-        Gson gson = builder.create();
-        String json = gson.toJson(list);
+        List<ProductUploadEntity> list = new ArrayList<>();
+        LinkedHashMap<ProductUploadEntity, List<ProductUploadEntity.DetailProductEntity>> hashMap = new LinkedHashMap<>();
+        for (CreatePalletModel model : realmResults) {
+            for (DetailProductScanModel detailProductScanModel : model.getProductList()) {
+                ProductUploadEntity productUploadEntity = new ProductUploadEntity(model.getGroupId(), detailProductScanModel.getProductId());
+                List<ProductUploadEntity.DetailProductEntity> contentList = new ArrayList<>();
+                if (hashMap.get(productUploadEntity) != null) {
+                    contentList.addAll(hashMap.get(productUploadEntity));
+                } else {
+                    ProductUploadEntity.DetailProductEntity detail = new ProductUploadEntity.DetailProductEntity(detailProductScanModel.getBarcode(),
+                            detailProductScanModel.getNumber(), detailProductScanModel.getPack(), detailProductScanModel.getBatch());
+                    contentList.add(detail);
+                    hashMap.put(productUploadEntity, contentList);
+                }
+
+            }
+
+        }
+
+        for (Map.Entry<ProductUploadEntity, List<ProductUploadEntity.DetailProductEntity>> map : hashMap.entrySet()) {
+            ProductUploadEntity productUploadEntity = map.getKey();
+            productUploadEntity.setListCodeDetailProductScan(map.getValue());
+            list.add(productUploadEntity);
+        }
+
+        String json = new Gson().toJson(list);
         return json;
     }
 
@@ -239,10 +256,6 @@ public class CreatePalletModel extends RealmObject {
 
     public long getGroupId() {
         return groupId;
-    }
-
-    public long getProductId() {
-        return productId;
     }
 
     public int getNumber() {

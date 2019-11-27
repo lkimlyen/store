@@ -91,11 +91,11 @@ public class ProductListModel extends RealmObject {
                                 .equalTo("status", Constants.WAITING_UPLOAD)
                                 .findFirst();
                         if (log != null) {
-                            if (log.getNumberRest() > 0 && createPalletModel != null) {
+                            if (log.getNumberRest() > 0) {
 //                            if () {
 //                                if (log.getNumberRest() == 1) {
-
-                                RealmList<DetailProductScanModel> detailList = createPalletModel.getProductList();
+                                if (createPalletModel != null) {
+                                    RealmList<DetailProductScanModel> detailList = createPalletModel.getProductList();
 //                                        boolean checkExist = false;
 //                                        for (int i = 1; i <= numberPack; i++) {
 //                                            for (DetailProductScanModel detail : detailList) {
@@ -112,21 +112,26 @@ public class ProductListModel extends RealmObject {
 //                                            CreatePalletModel.create(realm, product, model, barcode, batch);
 //                                            return null;
 //                                        } else {
-                                DetailProductScanModel detail = detailList.where().equalTo("pack", packCode)
-                                        .equalTo("productId", product.getId()).findFirst();
-                                if (detail == null || (detail.getNumber() < detail.getMaxNumber())) {
+                                    DetailProductScanModel detail = detailList.where().equalTo("pack", packCode)
+                                            .equalTo("productId", product.getId()).findFirst();
+                                    if (detail == null || (detail.getNumber() < detail.getMaxNumber())) {
+                                        CreatePalletModel.create(realm, product, model, barcode, batch);
+                                        return null;
+                                    } else {
+                                        HashMap<ProductListModel, ProductModel> hashMap = new HashMap<>();
+                                        hashMap.put(model, product);
+                                        if (result.size() > 0) {
+                                            result.set(0, hashMap);
+                                        } else {
+
+                                            result.add(hashMap);
+                                        }
+                                    }
+                                }else {
                                     CreatePalletModel.create(realm, product, model, barcode, batch);
                                     return null;
-                                } else {
-                                    HashMap<ProductListModel, ProductModel> hashMap = new HashMap<>();
-                                    hashMap.put(model, product);
-                                    if (result.size() > 0) {
-                                        result.set(0, hashMap);
-                                    } else {
-
-                                        result.add(hashMap);
-                                    }
                                 }
+
                             } else {
                                 HashMap<ProductListModel, ProductModel> hashMap = new HashMap<>();
                                 hashMap.put(model, product);

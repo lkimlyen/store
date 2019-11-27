@@ -579,26 +579,29 @@ public class CreatePalletFragment extends BaseFragment implements CreatePalletCo
 
     @Override
     public void showWarningPrint() {
-        new SweetAlertDialog(getContext(), SweetAlertDialog.WARNING_TYPE)
-                .setTitleText(getString(R.string.text_title_noti))
-                .setContentText(getString(R.string.err_nunber_pack_not_enough))
-                .setConfirmText(getString(R.string.text_yes))
-                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle(getString(R.string.text_title_noti));
+        builder.setMessage(getString(R.string.err_nunber_pack_not_enough));
+        builder.setCancelable(false);
+        builder.setPositiveButton(getString(R.string.text_yes),
+                new DialogInterface.OnClickListener() {
                     @Override
-                    public void onClick(SweetAlertDialog sweetAlertDialog) {
-                        sweetAlertDialog.dismiss();
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
                         goToPrint();
+                    }
+                });
+        builder.setNegativeButton(getString(R.string.text_no), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
 
-                    }
-                })
-                .setCancelText(getString(R.string.text_no))
-                .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                    @Override
-                    public void onClick(SweetAlertDialog sweetAlertDialog) {
-                        sweetAlertDialog.dismiss();
-                    }
-                })
-                .show();
+        AlertDialog alertDialog = builder.create();
+        alertDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        alertDialog.show();
+
     }
 
     @Override

@@ -189,7 +189,7 @@ public class CreatePalletPresenter implements CreatePalletContract.Presenter {
                         if (item.getValue() == 0){
                             view.showError(CoreApplication.getInstance().getString(R.string.err_scan_pack_empty));
                         }else {
-                            view.showError(CoreApplication.getInstance().getString(R.string.err_scan_pack_not_enough));
+                            view.showWarningPrint();
                         }
                     }
                 }
@@ -296,7 +296,6 @@ public class CreatePalletPresenter implements CreatePalletContract.Presenter {
         localRepository.checkBarcodeScan(barcode, orderId, batch).subscribe(new Action1<List<HashMap<ProductListModel, ProductModel>>>() {
             @Override
             public void call(List<HashMap<ProductListModel, ProductModel>> result) {
-
                 if (result == null) {
                     view.showSuccess(CoreApplication.getInstance().getString(R.string.text_save_barcode_success));
                 } else if (result.size() == 0) {

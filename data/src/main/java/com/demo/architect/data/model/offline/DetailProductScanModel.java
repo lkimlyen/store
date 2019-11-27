@@ -17,7 +17,8 @@ public class DetailProductScanModel extends RealmObject {
     @SerializedName("CodeScan")
     @Expose
     private String barcode;
-
+    @Expose
+    @SerializedName("ProductID")
     private long productId;
 
     private String productName;
